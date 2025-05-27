@@ -13,11 +13,20 @@ export async function POST(request: Request) {
       );
     }
 
+    // Ensure dateId is a number
+    const numericDateId = Number(dateId);
+    if (isNaN(numericDateId)) {
+      return NextResponse.json(
+        { error: 'Invalid date ID' },
+        { status: 400 }
+      );
+    }
+
     const vote = await prisma.vote.create({
       data: {
         name,
         email,
-        dateId: Number(dateId),
+        dateId: numericDateId,
       },
     });
 
@@ -25,7 +34,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error creating vote:', error);
     return NextResponse.json(
-      { error: 'Failed to create vote' },
+      { error: error instanceof Error ? error.message : 'Failed to create vote' },
       { status: 500 }
     );
   }
@@ -49,7 +58,7 @@ export async function GET() {
   } catch (error) {
     console.error('Error fetching votes:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch votes' },
+      { error: error instanceof Error ? error.message : 'Failed to fetch votes' },
       { status: 500 }
     );
   }

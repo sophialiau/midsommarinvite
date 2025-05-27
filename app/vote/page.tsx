@@ -59,9 +59,10 @@ export default function VotePage() {
         }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to submit vote');
+        throw new Error(data.error || 'Failed to submit vote');
       }
 
       await fetchVotes();
