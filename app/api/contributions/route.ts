@@ -3,35 +3,29 @@ import { prisma } from '../../lib/prisma';
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { name, email, items } = body;
+    const { name, email, item, quantity } = await request.json();
 
-    if (!name || !email || !items) {
+    if (!name || !email || !item || !quantity) {
       return NextResponse.json(
-        { error: 'Name, email, and items are required' },
+        { error: 'Missing required fields' },
         { status: 400 }
       );
     }
 
-    // Create a contribution for each item
-    const contributions = await Promise.all(
-      Object.entries(items).map(([type, quantity]) =>
-        prisma.contribution.create({
-          data: {
-            name,
-            email,
-            type,
-            details: quantity.toString(),
-          },
-        })
-      )
-    );
+    const contribution = await prisma.contribution.create({
+      data: {
+        name,
+        email,
+        item,
+        quantity: parseInt(quantity),
+      },
+    });
 
-    return NextResponse.json(contributions);
+    return NextResponse.json(contribution);
   } catch (error) {
-    console.error('Error creating contribution:', error);
+    console.error('Contribution error:', error);
     return NextResponse.json(
-      { error: 'Failed to create contribution' },
+      { error: 'Failed to save contribution' },
       { status: 500 }
     );
   }
@@ -40,18 +34,16 @@ export async function POST(request: Request) {
 export async function GET() {
   try {
     const contributions = await prisma.contribution.groupBy({
-      by: ['type'],
-      _sum: {
-        details: true,
+      by: ['item'],
+      _count: {
+        _all: true
       },
+      _sum: {
+        quantity: true
+      }
     });
 
-    const contributionCounts = contributions.reduce((acc, contribution) => {
-      acc[contribution.type] = parseInt(contribution._sum.details || '0');
-      return acc;
-    }, {} as { [key: string]: number });
-
-    return NextResponse.json(contributionCounts);
+    return NextResponse.json(contributions);
   } catch (error) {
     console.error('Error fetching contributions:', error);
     return NextResponse.json(

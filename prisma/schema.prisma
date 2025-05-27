@@ -34,8 +34,8 @@ model Contribution {
   id        Int      @id @default(autoincrement())
   name      String
   email     String
-  type      String
-  details   String
+  item      String
+  quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 } 
