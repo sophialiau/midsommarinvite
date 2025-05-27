@@ -1,6 +1,29 @@
-import Link from 'next/link'
+'use client';
+
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import WelcomeModal from './components/WelcomeModal';
 
 export default function Home() {
+  const [showModal, setShowModal] = useState(false);
+  const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
+
+  useEffect(() => {
+    // Check if user info exists in localStorage
+    const savedUserInfo = localStorage.getItem('userInfo');
+    if (!savedUserInfo) {
+      setShowModal(true);
+    } else {
+      setUserInfo(JSON.parse(savedUserInfo));
+    }
+  }, []);
+
+  const handleModalSubmit = (data: { name: string; email: string }) => {
+    setUserInfo(data);
+    localStorage.setItem('userInfo', JSON.stringify(data));
+    setShowModal(false);
+  };
+
   return (
     <main className="min-h-screen p-6 md:p-12 bg-[url('/floral-bg.png')] bg-cover bg-fixed">
       <div className="max-w-3xl mx-auto text-center">
@@ -8,7 +31,7 @@ export default function Home() {
           Midsommar Dinner Party
         </h1>
         <p className="text-lg md:text-xl text-blush-800 italic mb-8">
-          Another dinner party @ S & S's
+          Another dinner party @ S&S's
         </p>
         <div className="flex flex-col md:flex-row gap-4 justify-center mb-12">
           <Link href="/rsvp" className="btn-primary">RSVP</Link>
@@ -22,7 +45,7 @@ export default function Home() {
           </div>
           <div className="card">
             <h2 className="text-2xl font-display text-blush-600 mb-2">🌼 What to Bring</h2>
-            <p>Flowers & something to sip, Soph will take care of the rest</p>
+            <p>Flowers & something to sip<br />Soph will take care of the rest</p>
           </div>
         </div>
 
@@ -41,6 +64,12 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      <WelcomeModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onSubmit={handleModalSubmit}
+      />
     </main>
   );
 }

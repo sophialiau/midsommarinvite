@@ -11,7 +11,7 @@
   "dependencies": {
     "@fontsource/playfair-display": "^5.2.5",
     "@fontsource/quicksand": "^5.2.7",
-    "@prisma/client": "^5.10.0",
+    "@prisma/client": "^5.22.0",
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
@@ -25,6 +25,6 @@
     "typescript": "^5.3.3"
   },
   "devDependencies": {
-    "prisma": "^5.10.0"
+    "prisma": "^5.22.0"
   }
 }
