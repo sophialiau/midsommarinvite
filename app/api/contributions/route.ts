@@ -17,7 +17,7 @@ export async function POST(request: Request) {
         name,
         email,
         item,
-        quantity: parseInt(quantity),
+        quantity: Number(quantity),
       },
     });
 
@@ -35,15 +35,17 @@ export async function GET() {
   try {
     const contributions = await prisma.contribution.groupBy({
       by: ['item'],
-      _count: {
-        _all: true
-      },
       _sum: {
-        quantity: true
-      }
+        quantity: true,
+      },
     });
 
-    return NextResponse.json(contributions);
+    const contributionCounts = contributions.reduce((acc, contribution) => {
+      acc[contribution.item] = contribution._sum.quantity || 0;
+      return acc;
+    }, {} as { [key: string]: number });
+
+    return NextResponse.json(contributionCounts);
   } catch (error) {
     console.error('Error fetching contributions:', error);
     return NextResponse.json(

@@ -17,7 +17,7 @@ export async function POST(request: Request) {
       data: {
         name,
         email,
-        dateId,
+        dateId: Number(dateId),
       },
     });
 
@@ -36,12 +36,12 @@ export async function GET() {
     const votes = await prisma.vote.groupBy({
       by: ['dateId'],
       _count: {
-        dateId: true,
+        _all: true,
       },
     });
 
     const voteCounts = votes.reduce((acc, vote) => {
-      acc[vote.dateId] = vote._count.dateId;
+      acc[vote.dateId] = vote._count._all;
       return acc;
     }, {} as { [key: number]: number });
 

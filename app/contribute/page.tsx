@@ -57,8 +57,8 @@ export default function ContributePage() {
 
     try {
       // Submit each item separately
-      const promises = Object.entries(selectedItems).map(([item, quantity]) =>
-        fetch('/api/contributions', {
+      const promises = Object.entries(selectedItems).map(async ([item, quantity]) => {
+        const response = await fetch('/api/contributions', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -69,8 +69,15 @@ export default function ContributePage() {
             item,
             quantity,
           }),
-        })
-      );
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || `Failed to submit contribution for ${item}`);
+        }
+
+        return response.json();
+      });
 
       await Promise.all(promises);
       await fetchContributions();
@@ -78,7 +85,7 @@ export default function ContributePage() {
       router.push('/');
     } catch (error) {
       console.error('Error submitting contribution:', error);
-      alert('Failed to submit contribution. Please try again.');
+      alert(error instanceof Error ? error.message : 'Failed to submit contribution. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

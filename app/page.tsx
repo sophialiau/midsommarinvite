@@ -43,9 +43,9 @@ export default function Home() {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-8 max-w-md w-full">
-            <h2 className="text-2xl font-display text-blush-600 mb-4">🌸 Welcome to Our Midsummer Dinner Party 🌸</h2>
+            <h2 className="text-2xl font-display text-blush-600 mb-4">🌸 Welcome to Our Midsommer Dinner Party 🌸</h2>
             <p className="text-gray-600 mb-6">
-              Please enter your name and email to join the festivities!
+              Please enter your name and email!
             </p>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -90,10 +90,10 @@ export default function Home() {
       <div className="container mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-5xl md:text-6xl font-display text-blush-600 mb-4">
-            Midsummer Dinner Party 🌸
+            Midsommar Dinner Party 🌸
           </h1>
           <p className="text-xl text-gray-600">
-            Another magical evening @ S&S's
+            Another fabulous dinner @ S&S's
           </p>
         </div>
 
@@ -115,7 +115,7 @@ export default function Home() {
           <div className="bg-white bg-opacity-95 rounded-lg p-6 shadow-lg">
             <h2 className="text-2xl font-display text-blush-600 mb-4">🌸 RSVP</h2>
             <p className="text-gray-600 mb-4">
-              Will you join us for this special celebration?
+              Will you join us for this occasion to dress up & drink?
             </p>
             <Link
               href="/rsvp"

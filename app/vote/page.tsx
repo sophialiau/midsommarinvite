@@ -60,7 +60,8 @@ export default function VotePage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to submit vote');
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to submit vote');
       }
 
       await fetchVotes();
@@ -68,7 +69,7 @@ export default function VotePage() {
       router.push('/');
     } catch (error) {
       console.error('Error submitting vote:', error);
-      alert('Failed to submit vote. Please try again.');
+      alert(error instanceof Error ? error.message : 'Failed to submit vote. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
