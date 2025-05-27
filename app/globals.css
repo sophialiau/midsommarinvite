@@ -9,25 +9,20 @@
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-    to bottom,
-    rgb(var(--background-start-rgb)),
-    rgb(var(--background-end-rgb))
-  );
-  min-height: 100vh;
+  @apply font-sans text-chocolate;
+  background: linear-gradient(to bottom, #fffdf8, #fff6f0);
 }
 
 @layer components {
   .btn-primary {
-    @apply px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors;
+    @apply px-6 py-2 bg-blush-400 text-white font-semibold rounded-full hover:bg-blush-500 transition-all shadow-md;
   }
-  
+
   .btn-secondary {
-    @apply px-4 py-2 bg-white text-amber-600 border border-amber-600 rounded-lg hover:bg-amber-50 transition-colors;
+    @apply px-6 py-2 border-2 border-blush-400 text-blush-600 bg-white rounded-full hover:bg-blush-50 transition-all shadow-sm;
   }
 
   .card {
-    @apply bg-white rounded-xl shadow-lg p-6;
+    @apply bg-white bg-opacity-80 rounded-2xl shadow-xl p-6 backdrop-blur-md border border-sage;
   }
-} 
+}
