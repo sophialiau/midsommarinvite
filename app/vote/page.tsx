@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const DATES = [
-  { id: 1, date: 'June 20th, 2024', description: 'Thursday evening' },
-  { id: 2, date: 'June 21st, 2024', description: 'Friday evening' },
+  { id: 1, date: 'June 20th, 2025', description: 'Friday evening' },
+  { id: 2, date: 'June 21st, 2025', description: 'Saturday evening' },
 ];
 
 export default function VotePage() {

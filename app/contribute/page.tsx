@@ -8,6 +8,7 @@ const CONTRIBUTION_ITEMS = [
   { id: 'prosecco', label: 'Prosecco', description: '3 bottles needed', max: 3 },
   { id: 'white_wine', label: 'White Wine', description: '2 bottles needed', max: 2 },
   { id: 'red_wine', label: 'Red Wine', description: '2 bottles needed', max: 2 },
+  { id: 'flowers', label: 'Flowers', description: '2 bouquets needed', max: 2 },
 ];
 
 export default function ContributePage() {
@@ -55,22 +56,23 @@ export default function ContributePage() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/contributions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: userInfo?.name,
-          email: userInfo?.email,
-          items: selectedItems,
-        }),
-      });
+      // Submit each item separately
+      const promises = Object.entries(selectedItems).map(([item, quantity]) =>
+        fetch('/api/contributions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: userInfo?.name,
+            email: userInfo?.email,
+            item,
+            quantity,
+          }),
+        })
+      );
 
-      if (!response.ok) {
-        throw new Error('Failed to submit contribution');
-      }
-
+      await Promise.all(promises);
       await fetchContributions();
       alert('Thank you for your contribution!');
       router.push('/');
