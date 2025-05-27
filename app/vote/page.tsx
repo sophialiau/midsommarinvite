@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const DATES = [
-  { id: 1, date: 'June 20th, 2024', day: 'Thursday' },
-  { id: 2, date: 'June 21st, 2024', day: 'Friday' },
+  { id: 1, date: 'June 20th, 2024', description: 'Thursday evening' },
+  { id: 2, date: 'June 21st, 2024', description: 'Friday evening' },
 ];
 
 export default function VotePage() {
@@ -14,7 +14,7 @@ export default function VotePage() {
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
   const [selectedDate, setSelectedDate] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [voteResults, setVoteResults] = useState<{ [key: number]: number }>({});
+  const [votes, setVotes] = useState<{ [key: number]: number }>({});
 
   useEffect(() => {
     const savedUserInfo = localStorage.getItem('userInfo');
@@ -24,25 +24,25 @@ export default function VotePage() {
       setUserInfo(JSON.parse(savedUserInfo));
     }
 
-    // Fetch current vote results
-    fetchVoteResults();
+    // Fetch current votes
+    fetchVotes();
   }, [router]);
 
-  const fetchVoteResults = async () => {
+  const fetchVotes = async () => {
     try {
       const response = await fetch('/api/votes');
       if (response.ok) {
         const data = await response.json();
-        setVoteResults(data);
+        setVotes(data);
       }
     } catch (error) {
-      console.error('Error fetching vote results:', error);
+      console.error('Error fetching votes:', error);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedDate) return;
+    if (selectedDate === null) return;
 
     setIsSubmitting(true);
 
@@ -63,8 +63,9 @@ export default function VotePage() {
         throw new Error('Failed to submit vote');
       }
 
-      await fetchVoteResults();
-      router.push('/contribute');
+      await fetchVotes();
+      alert('Thank you for your vote!');
+      router.push('/');
     } catch (error) {
       console.error('Error submitting vote:', error);
       alert('Failed to submit vote. Please try again.');
@@ -85,9 +86,9 @@ export default function VotePage() {
         </Link>
 
         <div className="bg-white bg-opacity-95 rounded-lg p-8 shadow-lg">
-          <h1 className="text-4xl font-display text-blush-600 mb-6">Vote for the Date</h1>
+          <h1 className="text-4xl font-display text-blush-600 mb-6">Vote for Date</h1>
           <p className="text-gray-600 mb-8">
-            Hi {userInfo.name}! Help us choose the perfect evening for our Midsommar celebration.
+            Hi {userInfo.name}! Please help us choose the perfect date for our Midsommar celebration.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-8">
@@ -102,16 +103,15 @@ export default function VotePage() {
                   }`}
                   onClick={() => setSelectedDate(date.id)}
                 >
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-start">
                     <div>
                       <h3 className="text-xl font-medium text-gray-900">{date.date}</h3>
-                      <p className="text-gray-600">{date.day}</p>
+                      <p className="text-gray-600">{date.description}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-medium text-blush-600">
-                        {voteResults[date.id] || 0}
+                      <p className="text-sm text-gray-500">
+                        {votes[date.id] || 0} votes
                       </p>
-                      <p className="text-sm text-gray-500">votes</p>
                     </div>
                   </div>
                 </div>
@@ -120,9 +120,9 @@ export default function VotePage() {
 
             <button
               type="submit"
-              disabled={!selectedDate || isSubmitting}
+              disabled={selectedDate === null || isSubmitting}
               className={`w-full py-3 px-6 rounded-lg text-white transition-colors ${
-                !selectedDate || isSubmitting
+                selectedDate === null || isSubmitting
                   ? 'bg-gray-400 cursor-not-allowed'
                   : 'bg-blush-500 hover:bg-blush-600'
               }`}

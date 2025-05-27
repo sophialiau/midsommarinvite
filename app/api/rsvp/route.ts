@@ -6,20 +6,20 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { name, email, attending, guests, dietaryRestrictions } = body;
 
-    if (!name || !email) {
+    if (!name || !email || attending === undefined) {
       return NextResponse.json(
-        { error: 'Name and email are required' },
+        { error: 'Name, email, and attendance status are required' },
         { status: 400 }
       );
     }
 
-    const rsvp = await prisma.rsvp.create({
+    const rsvp = await prisma.rSVP.create({
       data: {
         name,
         email,
-        attending: attending === 'yes',
-        guests,
-        dietaryRestrictions,
+        attending,
+        guests: attending ? guests : 0,
+        dietaryRestrictions: attending ? dietaryRestrictions : null,
       },
     });
 
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
-    const rsvps = await prisma.rsvp.findMany({
+    const rsvps = await prisma.rSVP.findMany({
       orderBy: {
         createdAt: 'desc',
       },

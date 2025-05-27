@@ -7,8 +7,8 @@ import Link from 'next/link';
 export default function RSVPPage() {
   const router = useRouter();
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
-  const [attending, setAttending] = useState<'yes' | 'no' | null>(null);
-  const [guests, setGuests] = useState(0);
+  const [attending, setAttending] = useState<boolean | null>(null);
+  const [guests, setGuests] = useState(1);
   const [dietaryRestrictions, setDietaryRestrictions] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -23,6 +23,8 @@ export default function RSVPPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (attending === null) return;
+
     setIsSubmitting(true);
 
     try {
@@ -44,7 +46,8 @@ export default function RSVPPage() {
         throw new Error('Failed to submit RSVP');
       }
 
-      router.push('/vote');
+      alert('Thank you for your RSVP!');
+      router.push('/');
     } catch (error) {
       console.error('Error submitting RSVP:', error);
       alert('Failed to submit RSVP. Please try again.');
@@ -70,72 +73,75 @@ export default function RSVPPage() {
             Hi {userInfo.name}! Please let us know if you can join us for our Midsommar celebration.
           </p>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-gray-700 mb-4">Will you be attending?</label>
-              <div className="flex gap-4">
-                <button
-                  type="button"
-                  onClick={() => setAttending('yes')}
-                  className={`flex-1 py-3 px-6 rounded-lg border-2 transition-colors ${
-                    attending === 'yes'
-                      ? 'bg-blush-500 text-white border-blush-500'
-                      : 'border-gray-300 hover:border-blush-500'
-                  }`}
-                >
-                  Yes, I'll be there!
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setAttending('no')}
-                  className={`flex-1 py-3 px-6 rounded-lg border-2 transition-colors ${
-                    attending === 'no'
-                      ? 'bg-gray-500 text-white border-gray-500'
-                      : 'border-gray-300 hover:border-gray-500'
-                  }`}
-                >
-                  Sorry, can't make it
-                </button>
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-gray-700 mb-4">Will you be attending?</label>
+                <div className="flex gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setAttending(true)}
+                    className={`flex-1 py-3 px-6 rounded-lg border-2 transition-colors ${
+                      attending === true
+                        ? 'border-blush-500 bg-blush-50 text-blush-600'
+                        : 'border-gray-200 hover:border-blush-300'
+                    }`}
+                  >
+                    Yes, I'll be there!
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAttending(false)}
+                    className={`flex-1 py-3 px-6 rounded-lg border-2 transition-colors ${
+                      attending === false
+                        ? 'border-blush-500 bg-blush-50 text-blush-600'
+                        : 'border-gray-200 hover:border-blush-300'
+                    }`}
+                  >
+                    Sorry, I can't make it
+                  </button>
+                </div>
               </div>
+
+              {attending && (
+                <>
+                  <div>
+                    <label htmlFor="guests" className="block text-gray-700 mb-2">
+                      Number of Guests (including yourself)
+                    </label>
+                    <input
+                      type="number"
+                      id="guests"
+                      min="1"
+                      max="4"
+                      value={guests}
+                      onChange={(e) => setGuests(parseInt(e.target.value))}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blush-500 focus:border-transparent"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="dietary" className="block text-gray-700 mb-2">
+                      Dietary Restrictions
+                    </label>
+                    <textarea
+                      id="dietary"
+                      value={dietaryRestrictions}
+                      onChange={(e) => setDietaryRestrictions(e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blush-500 focus:border-transparent"
+                      rows={3}
+                      placeholder="Please let us know if you have any dietary restrictions or allergies..."
+                    />
+                  </div>
+                </>
+              )}
             </div>
-
-            {attending === 'yes' && (
-              <>
-                <div>
-                  <label className="block text-gray-700 mb-2">
-                    Number of additional guests (including yourself)
-                  </label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="4"
-                    value={guests}
-                    onChange={(e) => setGuests(parseInt(e.target.value))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blush-500 focus:border-transparent"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-700 mb-2">
-                    Dietary restrictions or allergies
-                  </label>
-                  <textarea
-                    value={dietaryRestrictions}
-                    onChange={(e) => setDietaryRestrictions(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blush-500 focus:border-transparent"
-                    rows={3}
-                    placeholder="Please let us know if you have any dietary restrictions or allergies"
-                  />
-                </div>
-              </>
-            )}
 
             <button
               type="submit"
-              disabled={!attending || isSubmitting}
+              disabled={attending === null || isSubmitting}
               className={`w-full py-3 px-6 rounded-lg text-white transition-colors ${
-                !attending || isSubmitting
+                attending === null || isSubmitting
                   ? 'bg-gray-400 cursor-not-allowed'
                   : 'bg-blush-500 hover:bg-blush-600'
               }`}

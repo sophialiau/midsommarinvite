@@ -4,20 +4,18 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-const CONTRIBUTION_TYPES = [
-  { id: 'drinks', label: 'Drinks', description: 'Wine, beer, or non-alcoholic beverages' },
-  { id: 'appetizers', label: 'Appetizers', description: 'Light bites to start the evening' },
-  { id: 'dessert', label: 'Dessert', description: 'Sweet treats to end the night' },
-  { id: 'flowers', label: 'Flowers', description: 'Fresh blooms for decoration' },
+const CONTRIBUTION_ITEMS = [
+  { id: 'prosecco', label: 'Prosecco', description: '3 bottles needed', max: 3 },
+  { id: 'white_wine', label: 'White Wine', description: '2 bottles needed', max: 2 },
+  { id: 'red_wine', label: 'Red Wine', description: '2 bottles needed', max: 2 },
 ];
 
 export default function ContributePage() {
   const router = useRouter();
   const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
-  const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [contributionDetails, setContributionDetails] = useState('');
+  const [selectedItems, setSelectedItems] = useState<{ [key: string]: number }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [contributions, setContributions] = useState<{ [key: string]: string[] }>({});
+  const [contributions, setContributions] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
     const savedUserInfo = localStorage.getItem('userInfo');
@@ -43,9 +41,16 @@ export default function ContributePage() {
     }
   };
 
+  const handleQuantityChange = (itemId: string, quantity: number) => {
+    setSelectedItems(prev => ({
+      ...prev,
+      [itemId]: quantity
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedType) return;
+    if (Object.keys(selectedItems).length === 0) return;
 
     setIsSubmitting(true);
 
@@ -58,8 +63,7 @@ export default function ContributePage() {
         body: JSON.stringify({
           name: userInfo?.name,
           email: userInfo?.email,
-          type: selectedType,
-          details: contributionDetails,
+          items: selectedItems,
         }),
       });
 
@@ -90,59 +94,68 @@ export default function ContributePage() {
         </Link>
 
         <div className="bg-white bg-opacity-95 rounded-lg p-8 shadow-lg">
-          <h1 className="text-4xl font-display text-blush-600 mb-6">Contribute</h1>
+          <h1 className="text-4xl font-display text-blush-600 mb-6">💐 Bring Something</h1>
           <p className="text-gray-600 mb-8">
-            Hi {userInfo.name}! Let us know what you'd like to bring to our Midsommar celebration.
+            Hi {userInfo.name}! Let's make this celebration extra special.
           </p>
 
+          <div className="bg-blush-50 border-2 border-blush-200 rounded-lg p-6 mb-8">
+            <h2 className="text-xl font-display text-blush-600 mb-4">🌸 Flower Crown Activity</h2>
+            <p className="text-gray-600">
+              Each guest is asked to bring 2 bunches of grocery store flowers for our flower crown making activity! 
+              We'll provide the supplies and guidance to create beautiful crowns together.
+            </p>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="space-y-4">
-              {CONTRIBUTION_TYPES.map((type) => (
-                <div
-                  key={type.id}
-                  className={`p-6 rounded-lg border-2 cursor-pointer transition-colors ${
-                    selectedType === type.id
-                      ? 'border-blush-500 bg-blush-50'
-                      : 'border-gray-200 hover:border-blush-300'
-                  }`}
-                  onClick={() => setSelectedType(type.id)}
-                >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-xl font-medium text-gray-900">{type.label}</h3>
-                      <p className="text-gray-600">{type.description}</p>
+            <div className="space-y-6">
+              {CONTRIBUTION_ITEMS.map((item) => {
+                const remaining = item.max - (contributions[item.id] || 0);
+                const selected = selectedItems[item.id] || 0;
+                
+                return (
+                  <div key={item.id} className="p-6 rounded-lg border-2 border-gray-200">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h3 className="text-xl font-medium text-gray-900">{item.label}</h3>
+                        <p className="text-gray-600">{item.description}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm text-gray-500">
+                          {remaining} remaining
+                        </p>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-sm text-gray-500">
-                        {contributions[type.id]?.length || 0} people bringing
-                      </p>
+                    
+                    <div className="flex items-center gap-4">
+                      <button
+                        type="button"
+                        onClick={() => handleQuantityChange(item.id, Math.max(0, selected - 1))}
+                        className="w-8 h-8 rounded-full border-2 border-blush-500 text-blush-500 flex items-center justify-center hover:bg-blush-50"
+                        disabled={selected === 0}
+                      >
+                        -
+                      </button>
+                      <span className="text-lg font-medium">{selected}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleQuantityChange(item.id, Math.min(remaining, selected + 1))}
+                        className="w-8 h-8 rounded-full border-2 border-blush-500 text-blush-500 flex items-center justify-center hover:bg-blush-50"
+                        disabled={selected >= remaining}
+                      >
+                        +
+                      </button>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
-
-            {selectedType && (
-              <div>
-                <label className="block text-gray-700 mb-2">
-                  What will you bring?
-                </label>
-                <textarea
-                  value={contributionDetails}
-                  onChange={(e) => setContributionDetails(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blush-500 focus:border-transparent"
-                  rows={3}
-                  placeholder="Please describe what you plan to bring..."
-                  required
-                />
-              </div>
-            )}
 
             <button
               type="submit"
-              disabled={!selectedType || !contributionDetails || isSubmitting}
+              disabled={Object.keys(selectedItems).length === 0 || isSubmitting}
               className={`w-full py-3 px-6 rounded-lg text-white transition-colors ${
-                !selectedType || !contributionDetails || isSubmitting
+                Object.keys(selectedItems).length === 0 || isSubmitting
                   ? 'bg-gray-400 cursor-not-allowed'
                   : 'bg-blush-500 hover:bg-blush-600'
               }`}

@@ -4,25 +4,30 @@ import { prisma } from '../../lib/prisma';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, type, details } = body;
+    const { name, email, items } = body;
 
-    if (!name || !email || !type || !details) {
+    if (!name || !email || !items) {
       return NextResponse.json(
-        { error: 'Name, email, type, and details are required' },
+        { error: 'Name, email, and items are required' },
         { status: 400 }
       );
     }
 
-    const contribution = await prisma.contribution.create({
-      data: {
-        name,
-        email,
-        type,
-        details,
-      },
-    });
+    // Create a contribution for each item
+    const contributions = await Promise.all(
+      Object.entries(items).map(([type, quantity]) =>
+        prisma.contribution.create({
+          data: {
+            name,
+            email,
+            type,
+            details: quantity.toString(),
+          },
+        })
+      )
+    );
 
-    return NextResponse.json(contribution);
+    return NextResponse.json(contributions);
   } catch (error) {
     console.error('Error creating contribution:', error);
     return NextResponse.json(
@@ -36,13 +41,13 @@ export async function GET() {
   try {
     const contributions = await prisma.contribution.groupBy({
       by: ['type'],
-      _count: {
-        type: true,
+      _sum: {
+        details: true,
       },
     });
 
     const contributionCounts = contributions.reduce((acc, contribution) => {
-      acc[contribution.type] = contribution._count.type;
+      acc[contribution.type] = parseInt(contribution._sum.details || '0');
       return acc;
     }, {} as { [key: string]: number });
 

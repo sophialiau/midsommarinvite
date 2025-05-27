@@ -8,7 +8,7 @@ export async function POST(request: Request) {
 
     if (!name || !email || !dateId) {
       return NextResponse.json(
-        { error: 'Name, email, and dateId are required' },
+        { error: 'Name, email, and date ID are required' },
         { status: 400 }
       );
     }
