@@ -8,7 +8,7 @@ export default function Home() {
           Midsommar Dinner Party
         </h1>
         <p className="text-lg md:text-xl text-blush-800 italic mb-8">
-          A soft solstice evening of laughter, flowers & forever friendships
+          Another dinner party @ S & S's
         </p>
         <div className="flex flex-col md:flex-row gap-4 justify-center mb-12">
           <Link href="/rsvp" className="btn-primary">RSVP</Link>
@@ -22,14 +22,14 @@ export default function Home() {
           </div>
           <div className="card">
             <h2 className="text-2xl font-display text-blush-600 mb-2">🌼 What to Bring</h2>
-            <p>Flowers, something to sip, and your midsommar magic</p>
+            <p>Flowers & something to sip, Soph will take care of the rest</p>
           </div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6 text-center">
           <div className="card">
             <h3 className="text-xl font-display text-blush-500 mb-2">🌸 RSVP</h3>
-            <p>Will you join us under the sun?</p>
+            <p>Will you join us?</p>
           </div>
           <div className="card">
             <h3 className="text-xl font-display text-blush-500 mb-2">🗳️ Vote</h3>
