@@ -8,7 +8,6 @@ const CONTRIBUTION_ITEMS = [
   { id: 'prosecco', label: 'Prosecco', description: '3 bottles needed', max: 3 },
   { id: 'white_wine', label: 'White Wine', description: '2 bottles needed', max: 2 },
   { id: 'red_wine', label: 'Red Wine', description: '2 bottles needed', max: 2 },
-  { id: 'flowers', label: 'Flowers', description: '2 bouquets needed', max: 2 },
 ];
 
 export default function ContributePage() {
@@ -129,11 +128,13 @@ export default function ContributePage() {
                         <h3 className="text-xl font-medium text-gray-900">{item.label}</h3>
                         <p className="text-gray-600">{item.description}</p>
                       </div>
-                      <div className="text-right">
-                        <p className="text-sm text-gray-500">
-                          {remaining} remaining
-                        </p>
-                      </div>
+                      {item.id !== 'flowers' && (
+                        <div className="text-right">
+                          <p className="text-sm text-gray-500">
+                            {remaining} remaining
+                          </p>
+                        </div>
+                      )}
                     </div>
                     
                     <div className="flex items-center gap-4">
