@@ -111,45 +111,48 @@ export default function Home() {
         </div>
 
         {/* Event Details */}
-        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <div className="bg-white bg-opacity-95 rounded-lg p-6 shadow-lg">
-            <h2 className="text-2xl font-display text-blush-600 mb-4">🌸 RSVP</h2>
-            <p className="text-gray-600 mb-4">
-              Will you join us for this occasion to dress up & drink?
-            </p>
-            <Link
-              href="/rsvp"
-              className="inline-block py-2 px-4 bg-blush-500 text-white rounded-lg hover:bg-blush-600 transition-colors"
-            >
-              RSVP Now
-            </Link>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          <Link href="/rsvp" className="group">
+            <div className="bg-white bg-opacity-95 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+              <h2 className="text-2xl font-display text-blush-600 mb-2 group-hover:text-blush-700">RSVP</h2>
+              <p className="text-gray-600">Let us know if you can make it!</p>
+            </div>
+          </Link>
 
-          <div className="bg-white bg-opacity-95 rounded-lg p-6 shadow-lg">
-            <h2 className="text-2xl font-display text-blush-600 mb-4">🗳️ Vote</h2>
-            <p className="text-gray-600 mb-4">
-              Help choose the perfect evening for our gathering
-            </p>
-            <Link
-              href="/vote"
-              className="inline-block py-2 px-4 bg-blush-500 text-white rounded-lg hover:bg-blush-600 transition-colors"
-            >
-              Vote Now
-            </Link>
-          </div>
+          <Link href="/vote" className="group">
+            <div className="bg-white bg-opacity-95 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+              <h2 className="text-2xl font-display text-blush-600 mb-2 group-hover:text-blush-700">Vote for Date</h2>
+              <p className="text-gray-600">Help us pick the perfect day</p>
+            </div>
+          </Link>
 
-          <div className="bg-white bg-opacity-95 rounded-lg p-6 shadow-lg">
-            <h2 className="text-2xl font-display text-blush-600 mb-4">💐 Bring Something</h2>
-            <p className="text-gray-600 mb-4">
-              Sign up for blooms & bubbles to share
-            </p>
-            <Link
-              href="/contribute"
-              className="inline-block py-2 px-4 bg-blush-500 text-white rounded-lg hover:bg-blush-600 transition-colors"
-            >
-              Contribute
-            </Link>
-          </div>
+          <Link href="/contribute" className="group">
+            <div className="bg-white bg-opacity-95 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+              <h2 className="text-2xl font-display text-blush-600 mb-2 group-hover:text-blush-700">Contribute</h2>
+              <p className="text-gray-600">Sign up to bring something</p>
+            </div>
+          </Link>
+
+          <Link href="/inspiration" className="group">
+            <div className="bg-white bg-opacity-95 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+              <h2 className="text-2xl font-display text-blush-600 mb-2 group-hover:text-blush-700">📌 Inspiration</h2>
+              <p className="text-gray-600">Get inspired for our celebration</p>
+            </div>
+          </Link>
+
+          <Link href="/dresscode" className="group">
+            <div className="bg-white bg-opacity-95 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+              <h2 className="text-2xl font-display text-blush-600 mb-2 group-hover:text-blush-700">👗 Dress Code</h2>
+              <p className="text-gray-600">Summer vibes: linen, flowy shirts, long skirts</p>
+            </div>
+          </Link>
+
+          <Link href="/menu" className="group">
+            <div className="bg-white bg-opacity-95 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+              <h2 className="text-2xl font-display text-blush-600 mb-2 group-hover:text-blush-700">🍽️ Menu</h2>
+              <p className="text-gray-600">See what we'll be serving</p>
+            </div>
+          </Link>
         </div>
 
         {/* Footer */}
