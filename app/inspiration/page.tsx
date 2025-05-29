@@ -20,7 +20,7 @@ export default function InspirationPage() {
 
   return (
     <main className="min-h-screen p-6 md:p-12 bg-[url('/floral-bg.png')] bg-cover bg-fixed">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <Link href="/" className="text-blush-600 hover:text-blush-700 mb-8 inline-block">
           ← Back to Home
         </Link>
@@ -31,14 +31,14 @@ export default function InspirationPage() {
             Get inspired for our Midsommar with none other than a pinterest board.
           </p>
 
-          <div className="w-full">
+          <div className="w-full flex justify-center">
             <a 
               data-pin-do="embedBoard" 
-              data-pin-board-width="600" 
-              data-pin-scale-height="900" 
-              data-pin-scale-width="60" 
+              data-pin-board-width="900" 
+              data-pin-scale-height="1200" 
+              data-pin-scale-width="115" 
               href="https://ca.pinterest.com/sophsoph910/june-20th21st/"
-              className="w-full block"
+              className="w-full max-w-4xl block"
             ></a>
           </div>
         </div>
